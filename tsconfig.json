@@ -19,10 +19,10 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
-      "@controllers/*": ["./src/controllers/*"],
-      "@models/*": ["./src/models/*"],
-      "@views/*": ["./src/views/*"],
-      "@config/*": ["./src/config/*"]
+      "@useCases/*": ["./src/useCases/*"],
+      "@entities/*": ["./src/entities/*"],
+      "@config/*": ["./src/config/*"],
+      "@repositories/*": ["./src/repositories/*"]
     }
   },
   "include": [
