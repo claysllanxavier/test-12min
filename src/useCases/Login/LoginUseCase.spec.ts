@@ -1,18 +1,29 @@
 import request from "supertest";
 import bcrypt from "bcryptjs";
+import faker from "faker";
 import { app } from "../../app";
-import knex from "@config/database";
+import connection from "@config/database";
 import { User } from "@entities/User";
+import { PostgresUserRepository } from "@repositories/implementations/PostgresUserRepository";
 
-beforeAll(async (done) => {
-  await knex("users").insert(
+beforeAll(async () => {
+  await connection.create();
+});
+
+afterAll(async () => {
+  await connection.close();
+});
+
+beforeEach(async () => {
+  await connection.clear();
+
+  await new PostgresUserRepository().save(
     new User({
-      name: "Claysllan Xavier",
-      email: "claysllan-xavier@hotmail.com",
+      name: faker.name.findName(),
+      email: "joe@gmail.com",
       password: await bcrypt.hash("admin123", 8),
     })
   );
-  done();
 });
 
 describe("LoginUseCase", () => {
@@ -23,7 +34,7 @@ describe("LoginUseCase", () => {
   });
   it("it should return status code 401 if user was not found by email", async () => {
     const response = await request(app).post("/login").send({
-      email: "claysllan@hotmail.com",
+      email: "jhon@hotmail.com",
       password: "admin123",
     });
     expect(response.statusCode).toEqual(401);
@@ -31,7 +42,7 @@ describe("LoginUseCase", () => {
   });
   it("it should return status code 401 if password does not match", async () => {
     const response = await request(app).post("/login").send({
-      email: "claysllan-xavier@hotmail.com",
+      email: "joe@gmail.com",
       password: "12345678",
     });
     expect(response.statusCode).toEqual(401);
@@ -39,16 +50,11 @@ describe("LoginUseCase", () => {
   });
   it("it should authenticate user", async () => {
     const response = await request(app).post("/login").send({
-      email: "claysllan-xavier@hotmail.com",
+      email: "joe@gmail.com",
       password: "admin123",
     });
     expect(response.statusCode).toEqual(200);
     expect(response.body).toHaveProperty("message", "Login successfully");
     expect(response.body).toHaveProperty("data.token");
   });
-});
-
-afterAll(async (done) => {
-  await knex.destroy();
-  done();
 });
