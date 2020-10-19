@@ -12,7 +12,7 @@ export class ListAllAudioBooksController {
 
       return response.status(200).json({
         data,
-        message: "Audio Book created successfully",
+        message: "",
       });
     } catch (error) {
       if (error instanceof Error) {
