@@ -6,6 +6,8 @@ import connection from "@config/database";
 import { User } from "@entities/User";
 import { PostgresUserRepository } from "@repositories/implementations/PostgresUserRepository";
 
+let email, password;
+
 beforeAll(async () => {
   await connection.create();
 });
@@ -14,22 +16,27 @@ afterAll(async () => {
   await connection.close();
 });
 
-beforeEach(async () => {
+beforeEach(async (done) => {
   await connection.clear();
+
+  email = faker.internet.email();
+  password = faker.internet.password();
 
   await new PostgresUserRepository().save(
     new User({
       name: faker.name.findName(),
-      email: "joe@gmail.com",
-      password: await bcrypt.hash("admin123", 8),
+      email,
+      password: await bcrypt.hash(password, 8),
     })
   );
+
+  done();
 });
 
 describe("LoginUseCase", () => {
-  it("it should return status code 400 if request body is not valid", async () => {
+  it("it should return status code 422 if request body is not valid", async () => {
     const response = await request(app).post("/users").send();
-    expect(response.statusCode).toEqual(400);
+    expect(response.statusCode).toEqual(422);
     expect(response.body).toHaveProperty("message", "Validation fails.");
   });
   it("it should return status code 401 if user was not found by email", async () => {
@@ -42,16 +49,16 @@ describe("LoginUseCase", () => {
   });
   it("it should return status code 401 if password does not match", async () => {
     const response = await request(app).post("/login").send({
-      email: "joe@gmail.com",
-      password: "12345678",
+      email,
+      password: "1234dfkfdsdf5678",
     });
     expect(response.statusCode).toEqual(401);
     expect(response.body).toHaveProperty("message", "Password does not match.");
   });
   it("it should authenticate user", async () => {
     const response = await request(app).post("/login").send({
-      email: "joe@gmail.com",
-      password: "admin123",
+      email,
+      password,
     });
     expect(response.statusCode).toEqual(200);
     expect(response.body).toHaveProperty("message", "Login successfully");
