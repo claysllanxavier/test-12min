@@ -19,10 +19,12 @@ export class UpdateAudioBookUseCase {
 
     const resultUpdated = await this.audioBookRepository.update(audioBook);
 
-    await this.hlsProvider.generateFile(
-      audioBook.path,
-      `${audioBook.path.split(".")[0]}.m3u8`
-    );
+    if (audioBook.path) {
+      await this.hlsProvider.generateFile(
+        audioBook.path,
+        `${audioBook.path.split(".")[0]}.m3u8`
+      );
+    }
 
     return resultUpdated;
   }
