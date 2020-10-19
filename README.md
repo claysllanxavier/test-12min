@@ -1,5 +1,5 @@
 <div align="center">
-  ![12min](https://12min.com/assets/images/logo.svg) 
+      <img src="https://12min.com/assets/images/logo.svg" width="300px"/>
 </div>
 
 <br />
@@ -26,7 +26,7 @@
   </p>
 
 <p align="center">
-  <a href="https://insomnia.rest/run/?label=Run%20in%20Insomnia&uri=https%3A%2F%2Fraw.githubusercontent.com%2FStefanoSaffran%2Fecoleta%2Fmaster%2FInsomnia_2020-06-06.json" target="_blank"><img src="https://insomnia.rest/images/run.svg" alt="Run in Insomnia">
+  <a href="https://insomnia.rest/run/?label=Run%20in%20Insomnia&uri=https://raw.githubusercontent.com/claysllanxavier/test-12min/main/Insomnia_2020-10-19.json" target="_blank"><img src="https://insomnia.rest/images/run.svg" alt="Run in Insomnia">
   </a>
 </p>
 
