@@ -6,7 +6,7 @@ export class PostgresAudioBookRepository implements IAudioBookRepository {
   async getAll() {
     const audioBookRepository = getRepository(AudioBook);
 
-    const audioBooks = await audioBookRepository.find();
+    const audioBooks = await audioBookRepository.find({ relations: ["tags"] });
 
     return audioBooks;
   }
@@ -22,7 +22,9 @@ export class PostgresAudioBookRepository implements IAudioBookRepository {
   async findById(id: string): Promise<AudioBook> {
     const audioBookRepository = getRepository(AudioBook);
 
-    const audioBook = await audioBookRepository.findOneOrFail(id);
+    const audioBook = await audioBookRepository.findOneOrFail(id, {
+      relations: ["tags"],
+    });
 
     return audioBook;
   }

@@ -15,8 +15,6 @@ export class CreateAudioBookUseCase {
 
     const audioBook = new AudioBook(payload);
 
-    console.log(audioBook);
-
     await this.audioBookRepository.save(audioBook);
 
     return audioBook;

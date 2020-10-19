@@ -1,5 +1,4 @@
 import * as Yup from "yup";
-import bcrypt from "bcryptjs";
 
 import { Request, Response } from "express";
 import { CreateAudioBookUseCase } from "./CreateAudioBookUseCase";
