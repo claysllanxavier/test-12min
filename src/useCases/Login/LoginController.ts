@@ -11,12 +11,13 @@ export class LoginController {
       password: Yup.string().required(),
     });
 
-    if (!(await schema.isValid(request.body))) {
-      return response.status(400).json({ message: "Validation fails." });
-    }
-    const { email, password } = request.body;
-
     try {
+      await schema.validate(request.body, {
+        abortEarly: false,
+      });
+
+      const { email, password } = request.body;
+
       const data = await this.loginUseCase.execute({
         email,
         password,
@@ -24,7 +25,15 @@ export class LoginController {
 
       return response.json({ data, message: "Login successfully" });
     } catch (error) {
-      if (error instanceof Error) {
+      if (error instanceof Yup.ValidationError) {
+        const validationErrors: { [key: string]: string } = {};
+        error.inner.forEach((item) => {
+          validationErrors[item.path] = item.message;
+        });
+        return response
+          .status(422)
+          .json({ message: "Validation fails.", data: validationErrors });
+      } else if (error instanceof Error) {
         return response.status(401).json({
           message: error.message || "Unexpected error.",
         });

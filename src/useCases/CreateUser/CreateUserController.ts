@@ -11,20 +11,18 @@ export class CreateUserController {
     let { name, email, password } = request.body;
 
     const schema = Yup.object().shape({
-      name: Yup.string().required("The name is required."),
-      email: Yup.string().required("The email is required."),
-      password: Yup.string()
-        .required("The password is required.")
-        .min(6, "The password must be at least 6."),
+      name: Yup.string().required(),
+      email: Yup.string().required().email(),
+      password: Yup.string().required().min(6),
     });
 
-    if (!(await schema.isValid(request.body))) {
-      return response.status(400).json({ message: "Validation fails." });
-    }
-
-    password = await bcrypt.hash(password, 8);
-
     try {
+      await schema.validate(request.body, {
+        abortEarly: false,
+      });
+
+      password = await bcrypt.hash(password, 8);
+
       const user = await this.createUserUseCase.execute({
         name,
         email,
@@ -32,13 +30,27 @@ export class CreateUserController {
       });
 
       return response.status(201).json({
-        data: user,
+        data: { id: user.id, name, email },
         message: "User created successfully",
       });
     } catch (error) {
-      return response.status(400).json({
-        message: error.message || "Unexpected error.",
-      });
+      if (error instanceof Yup.ValidationError) {
+        const validationErrors: { [key: string]: string } = {};
+        error.inner.forEach((item) => {
+          validationErrors[item.path] = item.message;
+        });
+        return response
+          .status(422)
+          .json({ message: "Validation fails.", data: validationErrors });
+      } else if (error instanceof Error) {
+        return response.status(400).json({
+          message: error.message || "Unexpected error.",
+        });
+      } else {
+        return response.status(500).json({
+          message: "Internal Server Error",
+        });
+      }
     }
   }
 }
