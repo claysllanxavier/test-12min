@@ -1,4 +1,11 @@
-import { Entity, Column, PrimaryColumn, ManyToMany, JoinTable } from "typeorm";
+import {
+  Entity,
+  Column,
+  PrimaryColumn,
+  ManyToMany,
+  JoinTable,
+  AfterLoad,
+} from "typeorm";
 import { v4 as uuidv4 } from "uuid";
 import { Tag } from "./Tag";
 
@@ -29,6 +36,13 @@ export class AudioBook {
     },
   })
   tags: Tag[];
+
+  protected url: String;
+
+  @AfterLoad()
+  protected getUrl() {
+    this.url = `${process.env.APP_URL}/storage/${this.path.split(".")[0]}.m3u8`;
+  }
 
   constructor(props: Omit<AudioBook, "id">, id?: string) {
     Object.assign(this, props);

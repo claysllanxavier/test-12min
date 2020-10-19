@@ -12,11 +12,10 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use(routes);
-
 app.use(
   "/storage",
   express.static(path.resolve(__dirname, "..", "tmp", "uploads"))
 );
+app.use(routes);
 
 export { app };

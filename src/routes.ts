@@ -23,25 +23,33 @@ routes.post("/login", (request, response) => {
   return loginController.handle(request, response);
 });
 
-routes.use(AuthMiddleware);
-
-routes.get("/audio-books", (request, response) => {
+routes.get("/audio-books", AuthMiddleware, (request, response) => {
   return listAllAudioBooksController.handle(request, response);
 });
 
-routes.post("/audio-books", upload.single("audio"), (request, response) => {
-  return createAudioBookController.handle(request, response);
-});
+routes.post(
+  "/audio-books",
+  AuthMiddleware,
+  upload.single("audio"),
+  (request, response) => {
+    return createAudioBookController.handle(request, response);
+  }
+);
 
-routes.get("/audio-books/:id", (request, response) => {
+routes.get("/audio-books/:id", AuthMiddleware, (request, response) => {
   return showAudioBookController.handle(request, response);
 });
 
-routes.put("/audio-books/:id", upload.single("audio"), (request, response) => {
-  return updateAudioBookController.handle(request, response);
-});
+routes.put(
+  "/audio-books/:id",
+  AuthMiddleware,
+  upload.single("audio"),
+  (request, response) => {
+    return updateAudioBookController.handle(request, response);
+  }
+);
 
-routes.delete("/audio-books/:id", (request, response) => {
+routes.delete("/audio-books/:id", AuthMiddleware, (request, response) => {
   return deleteAudioBookController.handle(request, response);
 });
 
