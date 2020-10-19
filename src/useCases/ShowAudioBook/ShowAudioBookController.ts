@@ -22,7 +22,6 @@ export class ShowAudioBookController {
         message: "",
       });
     } catch (error) {
-      console.log(error);
       if (error instanceof Error) {
         return response.status(400).json({
           message: error.message || "Unexpected error.",

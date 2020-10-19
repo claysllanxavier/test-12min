@@ -2,8 +2,8 @@ import { AudioBook } from "@entities/AudioBook";
 
 export interface IAudioBookRepository {
   getAll(): Promise<AudioBook[]>;
-  save(audioBook: AudioBook): Promise<void>;
+  save(audioBook: AudioBook): Promise<AudioBook>;
   findById(id: string): Promise<AudioBook>;
-  update(audioBook: AudioBook): Promise<void>;
-  delete(id: string): Promise<void>;
+  update(audioBook: AudioBook): Promise<AudioBook>;
+  delete(id: string): Promise<Boolean>;
 }

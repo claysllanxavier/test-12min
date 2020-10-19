@@ -1,22 +1,22 @@
 import { AudioBook } from "@entities/AudioBook";
 import { IAudioBookRepository } from "@repositories/IAudioBookRespository";
 import { ITagRepository } from "@repositories/ITagRepository";
-import { ICreateAudioBookRequestDTO } from "./CreateAudioBookDTO";
+import { IUpdateAudioBookRequestDTO } from "./IUpdateAudioBookRequestDTO";
 
-export class CreateAudioBookUseCase {
+export class UpdateAudioBookUseCase {
   constructor(
     private audioBookRepository: IAudioBookRepository,
     private tagRepository: ITagRepository
   ) {}
-  async execute(data: ICreateAudioBookRequestDTO) {
+  async execute(data: IUpdateAudioBookRequestDTO) {
     const tags = await this.tagRepository.findByNameAndSave(data.tags);
 
     const payload = { ...data, tags: tags };
 
-    const audioBook = new AudioBook(payload);
+    const audioBook = new AudioBook(payload, data.id);
 
-    const audioBookDB = await this.audioBookRepository.save(audioBook);
+    const resultUpdated = await this.audioBookRepository.update(audioBook);
 
-    return audioBookDB;
+    return resultUpdated;
   }
 }

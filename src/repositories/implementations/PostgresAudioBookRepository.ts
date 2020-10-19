@@ -11,12 +11,14 @@ export class PostgresAudioBookRepository implements IAudioBookRepository {
     return audioBooks;
   }
 
-  async save(audioBook: AudioBook): Promise<void> {
+  async save(audioBook: AudioBook): Promise<AudioBook> {
     const audioBookRepository = getRepository(AudioBook);
 
-    const audioBookDB = audioBookRepository.create(audioBook);
+    const audioBookDB = await audioBookRepository.save(
+      audioBookRepository.create(audioBook)
+    );
 
-    await audioBookRepository.save(audioBookDB);
+    return audioBookDB;
   }
 
   async findById(id: string): Promise<AudioBook> {
@@ -29,19 +31,27 @@ export class PostgresAudioBookRepository implements IAudioBookRepository {
     return audioBook;
   }
 
-  async update(audioBook: AudioBook): Promise<void> {
+  async update(audioBook: AudioBook): Promise<AudioBook> {
     const audioBookRepository = getRepository(AudioBook);
 
-    await this.findById(audioBook.id);
+    const audioBookExists = await this.findById(audioBook.id);
 
-    await audioBookRepository.update(audioBook.id, audioBook);
+    if (!audioBookExists) {
+      return null;
+    }
+
+    const updatedAudioBook = Object.assign(audioBookExists, audioBook);
+
+    const audioBookDB = await audioBookRepository.save(updatedAudioBook);
+
+    return audioBookDB;
   }
 
-  async delete(id: string): Promise<void> {
+  async delete(id: string): Promise<Boolean> {
     const audioBookRepository = getRepository(AudioBook);
 
-    await this.findById(id);
+    const deletedAudioBook = await audioBookRepository.delete(id);
 
-    await audioBookRepository.delete(id);
+    return deletedAudioBook.affected > 0;
   }
 }

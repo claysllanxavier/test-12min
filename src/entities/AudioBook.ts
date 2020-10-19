@@ -14,7 +14,7 @@ export class AudioBook {
   public description: string;
 
   @Column()
-  public path: string;
+  public path?: string;
 
   @ManyToMany((type) => Tag)
   @JoinTable({
