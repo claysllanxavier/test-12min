@@ -8,6 +8,7 @@ import { createUserController } from "./useCases/CreateUser";
 import { loginController } from "./useCases/Login";
 import { createAudioBookController } from "./useCases/CreateAudioBook";
 import { listAllAudioBooksController } from "./useCases/ListAllAudioBooks";
+import { showAudioBookController } from "./useCases/ShowAudioBook";
 
 const routes = Router();
 const upload = multer(multerConfig);
@@ -28,6 +29,10 @@ routes.get("/audio-books", (request, response) => {
 
 routes.post("/audio-books", upload.single("audio"), (request, response) => {
   return createAudioBookController.handle(request, response);
+});
+
+routes.get("/audio-books/:id", (request, response) => {
+  return showAudioBookController.handle(request, response);
 });
 
 export { routes };

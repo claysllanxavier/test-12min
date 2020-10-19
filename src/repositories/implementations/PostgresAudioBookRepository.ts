@@ -22,7 +22,7 @@ export class PostgresAudioBookRepository implements IAudioBookRepository {
   async findById(id: string): Promise<AudioBook> {
     const audioBookRepository = getRepository(AudioBook);
 
-    const audioBook = await audioBookRepository.findOneOrFail(id, {
+    const audioBook = await audioBookRepository.findOne(id, {
       relations: ["tags"],
     });
 

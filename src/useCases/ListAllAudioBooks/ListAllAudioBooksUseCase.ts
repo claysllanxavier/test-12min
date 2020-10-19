@@ -1,4 +1,3 @@
-import { AudioBook } from "@entities/AudioBook";
 import { IAudioBookRepository } from "@repositories/IAudioBookRespository";
 
 export class ListAllAudioBooksUseCase {

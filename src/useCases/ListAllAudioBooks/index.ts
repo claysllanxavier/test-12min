@@ -1,5 +1,4 @@
 import { PostgresAudioBookRepository } from "@repositories/implementations/PostgresAudioBookRepository";
-import { PostgresTagRepository } from "@repositories/implementations/PostgresTagRepository";
 import { ListAllAudioBooksController } from "./ListAllAudioBooksController";
 import { ListAllAudioBooksUseCase } from "./ListAllAudioBooksUseCase";
 
